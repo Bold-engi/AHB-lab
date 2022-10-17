@@ -26,7 +26,7 @@ begin
   Swpdata(23 downto 16) <= hrdata(15 downto 8);  -- Byte 1 to Byte 2
   Swpdata(31 downto 24) <= hrdata(7  downto 0);  -- Byte 0 to Byte 3
   
-  HRDATA <= hrdata;
+  HRDATA <= Swpdata;
   
   end process;
 end;
