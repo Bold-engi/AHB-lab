@@ -15,7 +15,7 @@ begin
   -- Swapper own use --------------------------
   variable Swpdata  := std_logic_vector(31 downto 0);
   
-  -- Directly reads from ahbmst ---------------
+  -- Links with reads from ahbmst ---------------
   variable hrdata   := std_logic_vector(31 downto 0);
   begin
   
