@@ -12,10 +12,10 @@ architecture structure of data_swapper is
 begin
 
   seq: process(dmao)
-  -- Swapper own use --------------------------
+  -- Swapper own use -------------------------------------
   variable Swpdata  := std_logic_vector(31 downto 0);
   
-  -- Linking directly with reads from ahbmst ---------------
+  -- Linking directly with reads from ahbmst -------------
   variable hrdata   := std_logic_vector(31 downto 0);
   begin
   
