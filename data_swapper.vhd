@@ -30,8 +30,8 @@ end;
   
 entity data_swapper is
   port(
-    dmao : in ahb_dma_out_type;
-    );
+  dmao : in ahb_dma_out_type;
+  );
 end;
 
 architecture structural of AHB_bridge is
