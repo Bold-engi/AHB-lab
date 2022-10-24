@@ -35,8 +35,8 @@ architecture structural of state_machine is
 
 begin
 	comb : process(current_state, HTRANS, dmao) 
-	variable M_dmai := ahb_dma_in_type;
-	variable M_dmao := ahb_dma_out_type;
+	variable M_dmai :  ;
+	variable M_dmao : ahb_dma_out_type;
 
 	begin 
 		M_dmai := '0' ; dmai.start <= M_dmai;
