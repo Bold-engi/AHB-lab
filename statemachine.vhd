@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity state_machine is
 	port(
-    -- Clock and Reset-----------------------
+                -- Clock and Reset-----------------------
 		clkm : in std_logic;
 		rstn : in std_logic;
 		-- ARM Cortex-M0 AHB-Lite signals -------
