@@ -31,10 +31,11 @@ end;
 architecture structural of state_machine is
 
 	type M_state is (idle, insr_fetch);
-	signal current_state, next_state : M_state;	
+	signal current_state, next_state : M_state;
+	signal M_dmai
 
 begin
-	comb : process(current_state, HTRANS, dmao.ready) 
+	comb : process(current_state, HTRANS, dmao) 
 
 	begin 
 		
@@ -42,7 +43,7 @@ begin
 		case current_state is
 			when idle =>
 				HREADY <= '1',
-				dmai.start := '0';
+				dmai.start <= '0';
 				if HTRANS = '10' then
 					dmai.start <= '1';
 					next_state <= insr_fetch;
