@@ -32,30 +32,33 @@ architecture structural of state_machine is
 
 	type M_state is (idle, insr_fetch);
 	signal current_state, next_state : M_state;
-	signal M_dmai
 
 begin
 	comb : process(current_state, HTRANS, dmao) 
+	variable M_dmai := ahb_dma_in_type;
+	variable M_dmao := ahb_dma_out_type;
 
 	begin 
+		M_dmai := '0' ; dmai.start <= M_dmai;
+		M_dmao := '0' ; M_dmao := dmao.ready;
 		
 		next_state <= current_state;
 		case current_state is
 			when idle =>
 				HREADY <= '1',
-				dmai.start <= '0';
+				M_dmai := '0';
 				if HTRANS = '10' then
-					dmai.start <= '1';
+					M_dmai := '1';
 					next_state <= insr_fetch;
 				end if; 
 			when instr_fetch =>
 				HREADY <= '0',
-				dmai.start <= '0';
-			if dmao.ready = '1' then
-				HREADY <= '1';
-				next_state <= idle;
-			end if;
-		end case
+				M_dmai := '0';
+				if M_dmao = '1' then
+					HREADY <= '1';
+					next_state <= idle;
+				end if;
+		end case;
 	end process comb;
 	
 	seq : process (rstn, clkm) 
