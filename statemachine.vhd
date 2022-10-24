@@ -42,11 +42,11 @@ begin
 		case current_state is
 			when idle =>
 				HREADY <= '1',
-				dmai.start <= '0';
-			if HTRANS = '10' then
-				dmai.start <= '1';
-				next_state <= insr_fetch;
-			end if; 
+				dmai.start := '0';
+				if HTRANS = '10' then
+					dmai.start <= '1';
+					next_state <= insr_fetch;
+				end if; 
 			when instr_fetch =>
 				HREADY <= '0',
 				dmai.start <= '0';
@@ -54,7 +54,7 @@ begin
 				HREADY <= '1';
 				next_state <= idle;
 			end if;
-		end case;
+		end case
 	end process comb;
 	
 	seq : process (rstn, clkm) 
