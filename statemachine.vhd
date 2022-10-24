@@ -23,8 +23,8 @@ entity state_machine is
 		HWRITE : in std_logic;
 		HREADY : out std_logic;
 		-- AHB Master records (signals)----------
-		dmai : out ahd_dma_in_type;
-		dmao : in ahd_dma_out_type
+		dmai : out ahb_dma_in_type;
+		dmao : in ahb_dma_out_type
 	);
 end;
 
