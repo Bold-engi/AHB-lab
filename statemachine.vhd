@@ -12,7 +12,7 @@ use UNISIM.VComponents.all;
 
 entity state_machine is
 	port(
-    -- Clock and Reset-----------------------
+    		-- Clock and Reset-----------------------
 		clkm : in std_logic;
 		rstn : in std_logic;
 		-- ARM Cortex-M0 AHB-Lite signals -------
@@ -32,7 +32,6 @@ architecture structural of state_machine is
 
 	type M_state is (idle, instr_fetch);
 	signal current_state, next_state : M_state;
-	signal htrans : std_logic_vector (1 downto 0);
 
 begin
   
@@ -49,27 +48,28 @@ begin
 	variable M_dmai : std_ulogic;
 	variable M_dmao : std_ulogic;
 	variable hready : std_logic;
+	variable htrans : std_logic_vector (1 downto 0);
 
 	begin 
 		M_dmai := '0' ; dmai.start <= M_dmai;
 		M_dmao := '0' ; M_dmao := dmao.ready;
 		HREADY <= hready;
-		htrans <= HTRANS;
+		htrans := HTRANS;
 		
 		next_state <= current_state;
 		case current_state is
 			when idle =>
-				hready <= '1';
+				hready := '1';
 				M_dmai := '0';
 				if htrans = "10" then
 					M_dmai := '1';
 					next_state <= instr_fetch;
 				end if; 
 			when instr_fetch =>
-				hready <= '0';
+				hready := '0';
 				M_dmai := '0';
 				if M_dmao = '1' then
-					hready <= '1';
+					hready := '1';
 					next_state <= idle;
 				end if;
 		end case;
