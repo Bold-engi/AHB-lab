@@ -32,7 +32,7 @@ architecture structural of state_machine is
 
 	type M_state is (idle, instr_fetch);
 	signal current_state, next_state : M_state;
-	signal htrans : std_logci_vector (1 downto 0);
+	signal htrans : std_logic_vector (1 downto 0);
 
 begin
   
