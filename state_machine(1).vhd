@@ -10,12 +10,13 @@ use gaisler.misc.all;
 library UNISIM;
 use UNISIM.VComponents.all;
 
+-- Define the ports of state_machine -----
 entity state_machine is
   port(
     -- Clock and Reset -----------------
     clkm : in std_logic;
     rstn : in std_logic;
-    -- AHB DMA records --------------
+    -- AHB DMA records -----------------
     dmai : out ahb_dma_in_type;
     dmao : in ahb_dma_out_type;
     -- ARM Cortex-M0 AHB-Lite signals --
@@ -27,20 +28,20 @@ entity state_machine is
     HREADY : out std_logic -- AHB stall signal
     );
 end;
-
+  
 architecture structural of state_machine is
     type state_type is (IDLE,INSTR_FETCH);
     signal curr_st,next_st: state_type;
 
 begin
 -------------------------------
---FSM
+--Finite State Machine
 -------------------------------
 
--- tran logic
+    -- tranfer logic
     process(clkm,rstn)begin
-        if(clkm'event and clkm='1')then
-            if(rstn='0')then
+        if(clkm'event and clkm='1')then  -- state transfer when clock is on rising edge 
+            if(rstn='0')then             -- reset the state machine
                 curr_st <= IDLE;
             else
                 curr_st <= next_st;
@@ -48,9 +49,10 @@ begin
     	end if;
     end process;
 
--- next logic
+    -- next logic
     process(curr_st,HTRANS,dmao.ready)begin
         case curr_st is
+        -- Different states of FSM -----
         when IDLE =>
                 if(htrans="10")then
                 next_st <= INSTR_FETCH;
@@ -68,7 +70,7 @@ begin
         end case;
     end process;
 
--- output logic
+    -- output logic
     process(curr_st,next_st)begin
         if(curr_st=IDLE and next_st=INSTR_FETCH)then
             dmai.start <= '1';
@@ -82,7 +84,7 @@ begin
         end if;
     end process;
 
--- connect logic
+    -- connect logic
     process(HADDR)begin
         dmai.address <= HADDR;
     end process;
