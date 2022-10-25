@@ -63,7 +63,7 @@ begin
                 next_state <= IDLE;
         end case;
     end process; 
-       -- output logic
+       -- output logic----------------------
     process(current_state,next_state)begin
         if(current_state=IDLE and next_state=INSTR_FETCH)then
             dmai.start <= '1';
@@ -76,5 +76,17 @@ begin
             HREADY <= '1';
         end if;
     end process;
-
+----------connection logic-------------
+        -- connect logic
+    process(HADDR)begin
+        dmai.address <= HADDR;
+        dmai.size <= HSIZE;
+        dmai.wdata <= HWDATA;
+        dmai.size <= HSIZE;
+    end process;
+    
+    dmai.burst <= '0';
+    dmai.busy  <= '0';
+    dmai.irq   <= '0';
+  
 end structural;
