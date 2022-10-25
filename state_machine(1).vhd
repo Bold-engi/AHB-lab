@@ -78,12 +78,10 @@ begin
     end process;
 ----------connection logic-------------
         
-    process begin
-        dmai.address <= HADDR;
-        dmai.size <= HSIZE;
-        dmai.wdata <= HWDATA;
-        dmai.write <= HWRITE;
-    end process;
+    process begin dmai.address <= HADDR; end process;
+    process begin dmai.size <= HSIZE;    end process;
+    process begin dmai.wdata <= HWDATA;  end process;
+    process begin dmai.write <= HWRITE;  end process;
     
     dmai.burst <= '0';
     dmai.busy  <= '0';
