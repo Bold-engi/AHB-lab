@@ -43,7 +43,7 @@ begin
 		end if;
 		end process seq;
 			
-	comb : process (current_state, HTRANS, dmao)
+	comb : process (current_state, htrans, M_dmao)
 		variable M_dmao : std_ulogic;
 		variable htrans : std_logic_vector (1 downto 0);
 		begin
@@ -66,7 +66,7 @@ begin
 			end case;
 		end process;
 		-- output from the state--------------------------------------		
-		process (current_state)
+		process (current_state, hready, M_dmai, M_dmao)
 		variable M_dmai : std_ulogic;
 		variable M_dmao : std_ulogic;
 		variable hready : std_logic;
