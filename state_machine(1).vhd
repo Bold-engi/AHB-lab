@@ -19,72 +19,90 @@ entity state_machine is
     dmai : out ahb_dma_in_type;
     dmao : in ahb_dma_out_type;
     -- ARM Cortex-M0 AHB-Lite signals --
-    HADDR : in std_logic_vector (31 downto 0);      -- AHB transaction address
-    HSIZE : in std_logic_vector (2 downto 0);       -- AHB size: byte, half-word or word
-    HTRANS : in std_logic_vector (1 downto 0);      -- AHB transfer: non-sequential only
-    HWDATA : in std_logic_vector (31 downto 0);     -- AHB write-data
-    HWRITE : in std_logic;                          -- AHB write control
-    HREADY : out std_logic                          -- AHB stall signal
+    HADDR : in std_logic_vector (31 downto 0); -- AHB transaction address
+    HSIZE : in std_logic_vector (2 downto 0); -- AHB size: byte, half-word or word
+    HTRANS : in std_logic_vector (1 downto 0); -- AHB transfer: non-sequential only
+    HWDATA : in std_logic_vector (31 downto 0); -- AHB write-data
+    HWRITE : in std_logic; -- AHB write control
+    HREADY : out std_logic -- AHB stall signal
     );
 end;
+
 architecture structural of state_machine is
-    type type_state is (IDLE,INSTR_FETCH);
-    signal current_state,next_state: type_state;
+    type state_type is (IDLE,INSTR_FETCH);
+    signal curr_st,next_st: state_type;
 
 begin
-  ---------four steps of FSM --------------
+-------------------------------
+--FSM
+-------------------------------
 
---------transfer logic------------------
+-- tran logic
     process(clkm,rstn)begin
         if(clkm'event and clkm='1')then
             if(rstn='0')then
-                current_state <= IDLE;
+                curr_st <= IDLE;
             else
-                current_state <= next_state;
+                curr_st <= next_st;
     	    end if;
     	end if;
     end process;
-       ---------next logic------------
-    process(current_state,HTRANS,dmao.ready)begin
-        case current_state is
+
+-- next logic
+    process(curr_st,HTRANS,dmao.ready)begin
+        case curr_st is
         when IDLE =>
                 if(htrans="10")then
-                next_state <= INSTR_FETCH;
+                next_st <= INSTR_FETCH;
                 else
-                next_state <= IDLE;
+                next_st <= IDLE;
                 end if;
         when INSTR_FETCH =>
                 if(dmao.ready='1')then
-                next_state <= IDLE;
+                next_st <= IDLE;
                 else
-                next_state <= INSTR_FETCH;
+                next_st <= INSTR_FETCH;
                 end if;
         when OTHERS  =>
-                next_state <= IDLE;
+                next_st <= IDLE;
         end case;
-    end process; 
-       -- output logic----------------------
-    process(current_state,next_state)begin
-        if(current_state=IDLE and next_state=INSTR_FETCH)then
+    end process;
+
+-- output logic
+    process(curr_st,next_st)begin
+        if(curr_st=IDLE and next_st=INSTR_FETCH)then
             dmai.start <= '1';
         else 
             dmai.start <= '0';
         end if;
-        if(current_state=INSTR_FETCH and next_state=INSTR_FETCH)then
+        if(curr_st=INSTR_FETCH and next_st=INSTR_FETCH)then
             HREADY <= '0';
         else 
             HREADY <= '1';
         end if;
     end process;
-----------connection logic-------------
-        
-    process begin dmai.address <= HADDR; end process;
-    process begin dmai.size <= HSIZE;    end process;
-    process begin dmai.wdata <= HWDATA;  end process;
-    process begin dmai.write <= HWRITE;  end process;
+
+-- connect logic
+    process(HADDR)begin
+        dmai.address <= HADDR;
+    end process;
     
+    process(HSIZE)begin
+        dmai.size <= HSIZE;
+    end process;
+    
+    process(HWDATA)begin
+        dmai.wdata <= HWDATA;
+    end process;
+
+    process(HWRITE)begin
+        dmai.write <= HWRITE;
+    end process;
+
     dmai.burst <= '0';
     dmai.busy  <= '0';
     dmai.irq   <= '0';
-  
+
 end structural;
+
+
