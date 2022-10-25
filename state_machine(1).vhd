@@ -82,7 +82,7 @@ begin
         dmai.address <= HADDR;
         dmai.size <= HSIZE;
         dmai.wdata <= HWDATA;
-        dmai.size <= HSIZE;
+        dmai.write <= HWRITE;
     end process;
     
     dmai.burst <= '0';
