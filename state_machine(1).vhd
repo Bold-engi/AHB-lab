@@ -77,8 +77,8 @@ begin
         end if;
     end process;
 ----------connection logic-------------
-        -- connect logic
-    process(HADDR)begin
+        
+    process begin
         dmai.address <= HADDR;
         dmai.size <= HSIZE;
         dmai.wdata <= HWDATA;
