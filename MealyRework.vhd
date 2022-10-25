@@ -26,10 +26,6 @@ architecture structrual of state_machine is
   signal HReady : std_logic;
 
 begin
-   port map(
-   HTRANS => HTrans;
-   HREADY => HReady
-   );
   
    seq : process (clkm, rstn, next_state) 
    begin
@@ -38,10 +34,37 @@ begin
 	elsif rising_edge(clkm) then
 		current_state <= next_state;
 	end if;
-   end process seq;
+   end process;
 		
-   comb : process()
+   comb : process(current_state, next_state, HTrans, dmao)
    begin
    case current_state is
 	when idle =>
-	   
+	if HTrans = "10" then
+	   dmai.start = '1';
+	   next_state <= instr_fetch;
+	else
+	   next_state <= idle;
+	end if;
+	when instr_fetch =>
+	if dmao.ready = '1' then
+	   HReady = '1'; HREADY <= HReady;
+	   next_state <= idle;
+	else
+	   next_state <= instr_fetch;
+	end if;
+    end case;
+    end process;
+	    
+    comb2 : process(current_state)
+    begin
+    case current_state is
+	 when idle =>
+	 HReady = '1'; HREADY <= HReady;
+	 dmai.start = '0';
+	 when instr_fetch =>
+	 HReady = '0'; HREADY <= HReady;
+	 dmai.start = '0';
+    end case;
+    end process;
+end architecture;
