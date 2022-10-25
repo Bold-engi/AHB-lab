@@ -57,7 +57,7 @@ begin
 					else
 						next_state <= idle;
 					end if;
-				when instr_fetch;
+				when instr_fetch =>
 					if M_dmao = '1' then
 						next_state <= idle;
 					else 
@@ -73,7 +73,7 @@ begin
 		begin
 			M_dmai := '0' ; dmai.start <= M_dmai;
 			M_dmao := '0' ; M_dmao := dmao.ready;
-			HREADY <= hready;
+			HREADY := hready;
 			case current_state is
 				when idle =>
 				hready := '1';
@@ -93,4 +93,4 @@ begin
 				end if;
 		end case;
 	end process;
-end architecture structural;
+end architecture;
