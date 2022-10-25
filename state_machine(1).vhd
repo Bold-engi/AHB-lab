@@ -32,7 +32,7 @@ architecture structural of state_machine is
     signal current_state,next_state: type_state;
 
 begin
-  ---------three steps of FSM --------------
+  ---------four steps of FSM --------------
 
 --------transfer logic------------------
     process(clkm,rstn)begin
@@ -63,4 +63,17 @@ begin
                 next_state <= IDLE;
         end case;
     end process; 
-       
+       -- output logic
+    process(current_state,next_state)begin
+        if(current_state=IDLE and next_state=INSTR_FETCH)then
+            dmai.start <= '1';
+        else 
+            dmai.start <= '0';
+        end if;
+        if(current_state=INSTR_FETCH and next_state=INSTR_FETCH)then
+            HREADY <= '0';
+        else 
+            HREADY <= '1';
+        end if;
+    end process;
+
