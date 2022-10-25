@@ -66,7 +66,7 @@ begin
 			end case;
 		end process;
 		-- output from the state--------------------------------------		
-		process (state)
+		process (current_state)
 		variable M_dmai : std_ulogic;
 		variable M_dmao : std_ulogic;
 		variable hready : std_logic;
