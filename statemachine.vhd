@@ -47,15 +47,17 @@ begin
 	comb : process(current_state, HTRANS, dmao) 
 	variable M_dmai : std_ulogic;
 	variable M_dmao : std_ulogic;
+	variable hready : std_logic;
 
 	begin 
 		M_dmai := '0' ; dmai.start <= M_dmai;
 		M_dmao := '0' ; M_dmao := dmao.ready;
+		HREADY <= hready;
 		
 		next_state <= current_state;
 		case current_state is
 			when idle =>
-				HREADY <= '1';
+				hready <= '1';
 				M_dmai := '0';
 				if HTRANS = "10" then
 					M_dmai := '1';
