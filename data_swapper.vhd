@@ -14,8 +14,8 @@ entity data_swapper is
   port(
     -- AHB Master records --------------
     dmao : in ahb_dma_out_type;
-    -- ARM Cortex-M0 AHB-Lite signals --
-    HRDATA : out std_logic_vector (31 downto 0) -- AHB read-data
+    -- ARM Cortex-M0 -------------------
+    HRDATA : out std_logic_vector (31 downto 0)
     );
 end;
 
@@ -25,10 +25,10 @@ begin
 
   byte_swap: process(dmao)
   begin
-    HRDATA( 7 downto  0) <= dmao.rdata(31 downto 24);
-    HRDATA(15 downto  8) <= dmao.rdata(23 downto 16);
-    HRDATA(23 downto 16) <= dmao.rdata(15 downto  8);
-    HRDATA(31 downto 24) <= dmao.rdata( 7 downto  0);
+    HRDATA( 7 downto  0) <= dmao.rdata(31 downto 24); -- Byte 3 to Byte 0
+    HRDATA(15 downto  8) <= dmao.rdata(23 downto 16); -- Byte 2 to Byte 1
+    HRDATA(23 downto 16) <= dmao.rdata(15 downto  8); -- Byte 1 to Byte 2
+    HRDATA(31 downto 24) <= dmao.rdata( 7 downto  0); -- Byte 0 to Byte 3
   end process;
 
 end structural;
