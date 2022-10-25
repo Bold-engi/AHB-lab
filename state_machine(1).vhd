@@ -27,3 +27,40 @@ entity state_machine is
     HREADY : out std_logic                          -- AHB stall signal
     );
 end;
+architecture structural of state_machine is
+    type type_state is (IDLE,INSTR_FETCH);
+    signal current_state,next_state: type_state;
+
+begin
+  ---------three steps of FSM --------------
+
+--------transfer logic------------------
+    process(clkm,rstn)begin
+        if(clkm'event and clkm='1')then
+            if(rstn='0')then
+                current_state <= IDLE;
+            else
+                current_state <= next_state;
+    	    end if;
+    	end if;
+    end process;
+       ---------next logic------------
+    process(current_state,HTRANS,dmao.ready)begin
+        case current_state is
+        when IDLE =>
+                if(htrans="10")then
+                next_state <= INSTR_FETCH;
+                else
+                next_state <= IDLE;
+                end if;
+        when INSTR_FETCH =>
+                if(dmao.ready='1')then
+                next_state <= IDLE;
+                else
+                next_state <= INSTR_FETCH;
+                end if;
+        when OTHERS  =>
+                next_state <= IDLE;
+        end case;
+    end process; 
+       
